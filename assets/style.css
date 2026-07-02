@@ -1,0 +1,22 @@
+.main {
+    background-color: #f7f9fc;
+}
+
+.metric-card {
+    background: white;
+    padding:20px;
+    border-radius:15px;
+    box-shadow:0 4px 12px rgba(0,0,0,.08);
+}
+
+h1{
+    color:#16213E;
+}
+
+h2{
+    color:#16213E;
+}
+
+[data-testid="stSidebarNav"] {
+    display: none;
+}

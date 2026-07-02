@@ -1,0 +1,28 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.pytest_cache/
+.mypy_cache/
+.venv/
+venv/
+
+# Streamlit and secrets
+.streamlit/secrets.toml
+.env
+.env.*
+!.env.example
+
+# Local databases and generated reports
+*.db
+*.sqlite
+*.sqlite3
+Executive_Report.pdf
+generated_reports/
+
+# Editors and operating systems
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
