@@ -50,8 +50,8 @@ Sample Excel files are available in [`templates/`](templates/).
 ## Run Locally
 
 ```bash
-git clone <YOUR_REPOSITORY_URL>
-cd CFO_AI_PRO
+git clone https://github.com/shujanAL/CFO-AI-PRO.git
+cd CFO-AI-PRO
 python -m venv .venv
 ```
 
@@ -85,4 +85,3 @@ CFO AI PRO is a decision-support prototype. Its results do not replace professio
 ## Author
 
 **Shujaan Almutairi — شجعان المطيري**
-
