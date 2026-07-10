@@ -22,6 +22,7 @@ import engines.financial_score
 from components.kpi_cards import show_main_kpis
 from components.charts import show_forecast_chart
 from components.simulator import show_decision_simulator
+from components.copilot import show_financial_copilot
 from engines.financing_readiness import calculate_financing_readiness
 from utils.import_engine import validate_excel
 from utils.i18n import sar, tr
@@ -267,7 +268,7 @@ if is_arabic:
         ), axis=1
     )
     ranking_display = ranking_display.rename(columns={"Decision": "القرار", "Category": "الفئة", "Value": "القيمة", "Expected Profit": "الربح المتوقع", "Profit Change": "تغير الربح", "Health": "الصحة المالية", "Risk": "المخاطر", "Confidence": "الثقة", "Assumption": "الافتراض", "Decision Score": "درجة القرار"})
-st.dataframe(ranking_display, use_container_width=True)
+st.dataframe(ranking_display.head(10), use_container_width=True)
 
 best_decision = ranking.iloc[0]
 confidence_ar = {"High": "عالية", "Medium": "متوسطة", "Low": "منخفضة"}.get(
@@ -306,6 +307,10 @@ Risk: **{best_decision["Risk"]}** | Confidence: **{best_decision["Confidence"]}*
 recommendation = generate_recommendation(best_decision, metrics, language)
 
 st.info(recommendation)
+
+st.divider()
+
+show_financial_copilot(metrics, health, forecast, ranking, best_decision, financing, recommendation, language)
 
 st.divider()
 
