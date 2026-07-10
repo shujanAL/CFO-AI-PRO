@@ -24,6 +24,7 @@ from components.charts import show_forecast_chart
 from components.simulator import show_decision_simulator
 from components.copilot import show_financial_copilot
 from engines.financing_readiness import calculate_financing_readiness
+from utils.excel_converter import convert_to_cfo_template
 from utils.import_engine import validate_excel
 from utils.i18n import sar, tr
 
@@ -121,22 +122,55 @@ uploaded_file = st.file_uploader(
     type=["xlsx"]
 )
 
+with open("templates/cfo_ai_template.xlsx", "rb") as template_file:
+    st.download_button(
+        "⬇️ تحميل قالب Excel" if is_arabic else "⬇️ Download Excel Template",
+        data=template_file,
+        file_name="cfo_ai_template.xlsx",
+        mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        help="Use this template if your Excel file is not automatically recognized.",
+    )
+
 excel_file = uploaded_file if uploaded_file is not None else "templates/sample_company_data.xlsx"
 is_valid, validation_message = validate_excel(excel_file)
 
 if not is_valid:
-    st.error((f"ملف Excel غير متوافق: {validation_message}" if is_arabic else f"The uploaded workbook is not compatible: {validation_message}"))
-    st.info("استخدم قالب CFO AI وحافظ على أسماء الصفحات والأعمدة المطلوبة." if is_arabic else "Use the CFO AI template and keep the required sheet and column names.")
-    st.stop()
+    if uploaded_file is None:
+        st.error((f"ملف Excel غير متوافق: {validation_message}" if is_arabic else f"The uploaded workbook is not compatible: {validation_message}"))
+        st.info("استخدم قالب CFO AI وحافظ على أسماء الصفحات والأعمدة المطلوبة." if is_arabic else "Use the CFO AI template and keep the required sheet and column names.")
+        st.stop()
+
+    st.warning("الملف لا يطابق القالب، سأحاول تحويله تلقائيًا." if is_arabic else "The workbook does not match the template. CFO AI will try to convert it automatically.")
+    try:
+        conversion = convert_to_cfo_template(uploaded_file)
+        with st.expander("معاينة مطابقة الأعمدة" if is_arabic else "Column Mapping Preview", expanded=True):
+            st.dataframe(conversion["mapping_preview"], use_container_width=True, hide_index=True)
+        st.download_button(
+            "⬇️ تحميل الملف بعد التحويل" if is_arabic else "⬇️ Download Converted CFO AI Excel",
+            data=conversion["file"].getvalue(),
+            file_name="converted_cfo_ai_template.xlsx",
+            mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        )
+        if not conversion["usable"]:
+            st.error("لم أستطع التعرف بثقة على بيانات المبيعات والمصروفات. حمّل القالب الرسمي أو عدّل أسماء الأعمدة." if is_arabic else "CFO AI could not confidently identify sales and expense data. Download the template or rename the columns.")
+            st.stop()
+        excel_file = conversion["file"]
+        st.success("تم تحويل الملف واستخدامه للتحليل الحالي." if is_arabic else "Workbook converted and used for the current analysis.")
+    except Exception as error:
+        st.error(f"تعذر تحويل ملف Excel: {error}" if is_arabic else f"Could not convert the Excel workbook: {error}")
+        st.stop()
 elif uploaded_file is not None:
     st.success("تم التحقق من ملف الشركة وتحميله بنجاح." if is_arabic else "Company file validated and loaded successfully.")
 else:
     st.info("وضع العرض: تُستخدم بيانات شركة تجريبية. ارفع ملف Excel لتحليل شركتك." if is_arabic else "Demo mode: using sample company data. Upload an Excel file to analyze your company.")
 
 try:
-    sales = pd.read_excel(excel_file, sheet_name="Sales")
-    expenses = pd.read_excel(excel_file, sheet_name="Expenses")
-    invoices = pd.read_excel(excel_file, sheet_name="Invoices")
+    if hasattr(excel_file, "seek"):
+        excel_file.seek(0)
+    workbook = pd.ExcelFile(excel_file)
+    sales = pd.read_excel(workbook, sheet_name="Sales")
+    expenses = pd.read_excel(workbook, sheet_name="Expenses")
+    invoices = pd.read_excel(workbook, sheet_name="Invoices")
 except Exception as error:
     st.error(f"تعذر قراءة البيانات المالية: {error}" if is_arabic else f"Could not read the financial data: {error}")
     st.stop()
