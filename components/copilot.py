@@ -77,22 +77,25 @@ def show_financial_copilot(metrics, health, forecast, ranking, best_decision, fi
         [""] + examples,
         index=0,
     )
-    question = st.text_area(
+    custom_question = st.text_area(
         "Ask CFO AI" if not is_ar else "اسأل CFO AI",
-        value=selected or "",
-        placeholder=examples[0],
+        value="",
+        placeholder=selected or examples[0],
         height=90,
     )
+    question = custom_question.strip() or selected.strip()
+    if question:
+        st.caption(("السؤال الذي سيتم تحليله: " if is_ar else "Question to analyze: ") + question)
 
     if st.button("Ask CFO AI" if not is_ar else "اسأل CFO AI"):
-        if not question.strip():
+        if not question:
             st.error("Write a question first." if not is_ar else "اكتب السؤال أولاً.")
             return
 
         context = build_copilot_context(metrics, health, forecast, ranking, best_decision, financing, recommendation)
-        answer, source, error = ask_local_ai(question.strip(), context, language=language)
+        answer, source, error = ask_local_ai(question, context, language=language)
         if answer is None:
-            answer = ask_rule_based_copilot(question.strip(), context, language=language)
+            answer = ask_rule_based_copilot(question, context, language=language)
             source = "Rule-based Copilot"
 
         st.markdown(answer)

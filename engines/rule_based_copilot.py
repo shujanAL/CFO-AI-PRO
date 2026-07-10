@@ -28,6 +28,10 @@ def _forecast_direction(context):
     return "stable"
 
 
+def _has(text, keywords):
+    return any(keyword in text for keyword in keywords)
+
+
 def ask_rule_based_copilot(question, context, language="en"):
     q = question.lower()
     metrics = context.get("metrics", {})
@@ -48,14 +52,22 @@ def ask_rule_based_copilot(question, context, language="en"):
 
     if language == "ar":
         intro = "اعتمادًا على البيانات والتحليلات الحالية فقط:"
-        if "health" in q or "صحة" in q or "ليش" in q or "why" in q:
+        if _has(q, ["توقع", "forecast", "مبيعات جاية", "الشهور", "sales forecast"]):
+            trend = "صاعد" if forecast_direction == "up" else "هابط" if forecast_direction == "down" else "مستقر"
+            return f"""{intro}
+
+اتجاه توقعات المبيعات يبدو {trend}.
+إذا كان الاتجاه صاعدًا، الأفضل دعم النمو بدون رفع المصروفات بسرعة. وإذا كان هابطًا، راجع أسباب انخفاض المبيعات وركّز على التحصيل وخفض المصروفات المرنة.
+هذه قراءة مبنية على بيانات المبيعات الحالية وليست ضمانًا للنتائج القادمة."""
+
+        if _has(q, ["health", "صحة", "ليش", "why", "درجة", "score"]):
             return f"""{intro}
 
 درجة الصحة المالية هي {health_score:.0f}/100 وتصنيفها {tr(health_status, language)}.
 أهم العوامل المؤثرة: هامش الربح {profit_margin:.1f}%، نسبة المصروفات {expense_ratio:.1%}، ونسبة الفواتير المتأخرة {overdue_ratio:.1%}.
 إذا أردت رفع الدرجة، ابدأ بتحسين هامش الربح وتقليل المصروفات ذات الأثر الأعلى ومتابعة التحصيل."""
 
-        if "risk" in q or "خطر" in q or "مخاطر" in q:
+        if _has(q, ["risk", "خطر", "مخاطر", "مشكلة", "ضعف"]):
             risks = []
             if expense_ratio > 0.8:
                 risks.append("المصروفات تستهلك نسبة عالية من الإيرادات")
@@ -67,21 +79,21 @@ def ask_rule_based_copilot(question, context, language="en"):
                 risks.append("المخاطر الحالية تبدو تحت السيطرة، لكن يلزم متابعة المصروفات والتحصيل")
             return intro + "\n\nأكبر المخاطر: " + "، ".join(risks) + "."
 
-        if "financ" in q or "loan" in q or "تمويل" in q or "بنك" in q:
+        if _has(q, ["financ", "loan", "تمويل", "بنك", "قرض", "ائتمان"]):
             return f"""{intro}
 
 جاهزية التمويل الحالية {readiness_score:.0f}/100 بدرجة {readiness_grade}.
 إذا كانت الدرجة مرتفعة فهذا يدعم التقديم للمراجعة البنكية، لكن القرار النهائي يحتاج مستندات ومراجعة بشرية.
 قبل التقديم، ركّز على تقليل الفواتير المتأخرة وتحسين الربحية لأنها تؤثر مباشرة على الثقة الائتمانية."""
 
-        if "hire" in q or "employee" in q or "موظف" in q or "توظيف" in q:
+        if _has(q, ["hire", "employee", "موظف", "موظفين", "توظيف", "أوظف", "اوظف"]):
             if profit_margin >= 25 and health_score >= 75:
                 advice = "يمكن دراسة التوظيف بشكل تدريجي، بشرط أن يكون مرتبطًا بزيادة واضحة في المبيعات أو الإنتاجية."
             else:
                 advice = "لا أنصح بالتوظيف الكبير الآن؛ الأفضل اختبار موظف أو عقد مؤقت حتى تتحسن الربحية والصحة المالية."
             return f"{intro}\n\n{advice}\nصافي الربح الحالي {sar(net_profit, language)} وهامش الربح {profit_margin:.1f}%."
 
-        if "expense" in q or "reduce" in q or "مصروف" in q or "أخفض" in q:
+        if _has(q, ["expense", "reduce", "cost", "مصروف", "مصروفات", "أخفض", "اخفض", "تكلفة", "تكاليف"]):
             if best_expense:
                 category = tr(best_expense.get("Category", "Expenses"), language)
                 value = best_expense.get("Value", 0)
@@ -97,14 +109,21 @@ def ask_rule_based_copilot(question, context, language="en"):
 الصحة المالية {health_score:.0f}/100، هامش الربح {profit_margin:.1f}%، واتجاه التوقعات {trend}.
 نصيحتي: نفّذ القرار كتجربة محدودة ثم راقب الربح والتحصيل قبل التوسع."""
 
-    if "health" in q or "why" in q:
+    if _has(q, ["forecast", "sales forecast", "future sales", "next months", "trend"]):
+        return f"""Based only on the current analysis:
+
+The sales forecast trend looks {forecast_direction}.
+If the trend is up, support growth without increasing fixed costs too quickly. If it is down, review sales drivers, collections, and flexible expenses.
+This is a projection from current sales data, not a guaranteed outcome."""
+
+    if _has(q, ["health", "why", "score"]):
         return f"""Based only on the current analysis:
 
 Financial Health is {health_score:.0f}/100 ({health_status}).
 The main drivers are profit margin ({profit_margin:.1f}%), expense ratio ({expense_ratio:.1%}), and overdue invoices ({overdue_ratio:.1%}).
 To improve the score, focus on margin, high-impact expenses, and collections."""
 
-    if "risk" in q:
+    if _has(q, ["risk", "problem", "weakness", "danger"]):
         risks = []
         if expense_ratio > 0.8:
             risks.append("operating expenses consume a high share of revenue")
@@ -116,20 +135,20 @@ To improve the score, focus on margin, high-impact expenses, and collections."""
             risks.append("current risk looks controlled, but expenses and collections should still be monitored")
         return "Based only on the current analysis, the biggest risk is: " + "; ".join(risks) + "."
 
-    if "financ" in q or "loan" in q or "bank" in q:
+    if _has(q, ["financ", "loan", "bank", "credit"]):
         return f"""Based only on the current analysis:
 
 Financing readiness is {readiness_score:.0f}/100 with grade {readiness_grade}.
 This can support a bank review, but it is not an automated credit decision. Before applying, improve overdue collections and profitability because both affect lender confidence."""
 
-    if "hire" in q or "employee" in q:
+    if _has(q, ["hire", "employee", "employees", "recruit"]):
         if profit_margin >= 25 and health_score >= 75:
             advice = "Hiring can be tested gradually if each role is tied to measurable sales growth or productivity."
         else:
             advice = "Avoid major hiring right now; test one role or a temporary contract until profitability and health improve."
         return f"Based only on the current analysis:\n\n{advice}\nCurrent net profit is {sar(net_profit)} and profit margin is {profit_margin:.1f}%."
 
-    if "expense" in q or "reduce" in q or "cost" in q:
+    if _has(q, ["expense", "reduce", "cost", "spending", "cut"]):
         if best_expense:
             category = best_expense.get("Category", "Expenses")
             value = best_expense.get("Value", 0)
