@@ -6,7 +6,7 @@
 [![Streamlit](https://img.shields.io/badge/Streamlit-Live-FF4B4B?logo=streamlit&logoColor=white)](https://dcv7wnj96dqkafa7rb2ukc.streamlit.app/)
 [![GitHub](https://img.shields.io/badge/Repository-Public-181717?logo=github)](https://github.com/shujanAL/CFO-AI-PRO)
 
-**[Launch the live application](https://dcv7wnj96dqkafa7rb2ukc.streamlit.app/)** · **[Download the Excel template](templates/cfo_ai_template.xlsx)** · **[View the presentation](docs/CFO_AI_PRO_AMAD_2026_FINAL.pdf)**
+**[Launch the live application](https://dcv7wnj96dqkafa7rb2ukc.streamlit.app/)** · **[Download the Excel template](templates/cfo_ai_template.xlsx)** · **[View the presentation](docs/CFO_AI_PRO_AMAD_2026_FINAL.pptx)**
 
 ![CFO AI PRO project screens](docs/CFO_AI_PRO_project_screens.png)
 
@@ -129,4 +129,3 @@ CFO-AI-PRO/
 
 **Shujaan Almutairi — شجعان المطيري**  
 AMAD 2026 Hackathon
-
