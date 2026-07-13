@@ -21,6 +21,29 @@ def _compact_context(context):
     return json.dumps(safe_context, ensure_ascii=False, default=str)
 
 
+def _authoritative_facts(context):
+    metrics = context.get("metrics", {})
+    health = context.get("health", {})
+    financing = context.get("financing", {})
+    best = context.get("best_decision", {})
+    facts = {
+        "financial_health_score": health.get("score"),
+        "financial_health_status": health.get("status"),
+        "profit_margin_percent": metrics.get("profit_margin"),
+        "expense_ratio_percent": round(float(metrics.get("expense_ratio", 0)) * 100, 1),
+        "overdue_invoice_ratio_percent": round(float(metrics.get("overdue_ratio", 0)) * 100, 1),
+        "total_sales": metrics.get("total_sales"),
+        "total_expenses": metrics.get("total_expenses"),
+        "net_profit": metrics.get("net_profit"),
+        "bank_readiness_score": financing.get("score"),
+        "bank_readiness_grade": financing.get("grade"),
+        "bank_risk": financing.get("risk"),
+        "best_decision": best.get("Decision"),
+        "best_decision_expected_profit": best.get("Expected Profit"),
+    }
+    return json.dumps(facts, ensure_ascii=False, default=str)
+
+
 def is_ollama_available(timeout=1.5):
     try:
         request = urllib.request.Request("http://localhost:11434/api/tags", method="GET")
@@ -43,8 +66,17 @@ def ask_local_ai(question, context, language="en", model=DEFAULT_MODEL, timeout=
 You are CFO AI PRO, a privacy-first financial copilot.
 Use only the JSON context below. Do not invent facts, external market data, or guarantees.
 If the context is not enough, say what is missing and give a cautious next step.
+CRITICAL RULES:
+- The "Authoritative facts" section is the source of truth.
+- Never mention a score, percentage, ratio, amount, rank, or grade unless it appears in Authoritative facts or Financial context.
+- Do not round a score to 100/100 unless the score is exactly 100.
+- If asked why a score is high or low, cite the exact health score, profit margin, expense ratio, and overdue invoice ratio from the facts.
+- If you are uncertain, say "based on the available data" and avoid adding new numbers.
 
 {lang_instruction}
+
+Authoritative facts:
+{_authoritative_facts(context)}
 
 Financial context:
 {_compact_context(context)}
@@ -56,7 +88,7 @@ User question:
         "model": model,
         "prompt": prompt,
         "stream": False,
-        "options": {"temperature": 0.2},
+        "options": {"temperature": 0.0},
     }
 
     try:

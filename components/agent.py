@@ -2,7 +2,7 @@ import streamlit as st
 
 from components.copilot import build_copilot_context
 from engines.local_ai import ask_local_ai, is_ollama_available
-from engines.rule_based_copilot import ask_rule_based_copilot
+from engines.rule_based_copilot import ask_rule_based_copilot, is_verified_financial_question
 from utils.i18n import sar, tr
 
 
@@ -98,10 +98,14 @@ def show_cfo_agent(metrics, health, financing, forecast, ranking, best_decision,
 
         if request.strip():
             context = build_copilot_context(metrics, health, forecast, ranking, best_decision, financing, recommendation)
-            answer, source, _error = ask_local_ai(request.strip(), context, language=language)
-            if answer is None:
+            if is_verified_financial_question(request.strip()):
                 answer = ask_rule_based_copilot(request.strip(), context, language=language)
-                source = "Rule-based Agent"
+                source = "Verified Financial Engine"
+            else:
+                answer, source, _error = ask_local_ai(request.strip(), context, language=language)
+                if answer is None:
+                    answer = ask_rule_based_copilot(request.strip(), context, language=language)
+                    source = "Rule-based Agent"
             st.markdown(answer)
             st.caption(("Answer source: " if not is_ar else "مصدر الإجابة: ") + source)
         else:

@@ -32,6 +32,14 @@ def _has(text, keywords):
     return any(keyword in text for keyword in keywords)
 
 
+def is_verified_financial_question(question):
+    q = question.lower()
+    return _has(q, [
+        "health", "score", "why", "risk", "financ", "loan", "bank", "credit",
+        "صحة", "درجة", "ليش", "لماذا", "مخاطر", "خطر", "تمويل", "بنك", "قرض", "ائتمان",
+    ])
+
+
 def ask_rule_based_copilot(question, context, language="en"):
     q = question.lower()
     metrics = context.get("metrics", {})

@@ -2,7 +2,7 @@ import pandas as pd
 import streamlit as st
 
 from engines.local_ai import ask_local_ai, is_ollama_available
-from engines.rule_based_copilot import ask_rule_based_copilot
+from engines.rule_based_copilot import ask_rule_based_copilot, is_verified_financial_question
 
 
 EXAMPLE_QUESTIONS_EN = [
@@ -93,10 +93,15 @@ def show_financial_copilot(metrics, health, forecast, ranking, best_decision, fi
             return
 
         context = build_copilot_context(metrics, health, forecast, ranking, best_decision, financing, recommendation)
-        answer, source, error = ask_local_ai(question, context, language=language)
-        if answer is None:
+        if is_verified_financial_question(question):
             answer = ask_rule_based_copilot(question, context, language=language)
-            source = "Rule-based Copilot"
+            source = "Verified Financial Engine"
+            error = None
+        else:
+            answer, source, error = ask_local_ai(question, context, language=language)
+            if answer is None:
+                answer = ask_rule_based_copilot(question, context, language=language)
+                source = "Rule-based Copilot"
 
         st.markdown(answer)
         st.caption(f"Answer source: {source}" if not is_ar else f"مصدر الإجابة: {source}")
