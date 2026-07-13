@@ -23,6 +23,7 @@ from components.kpi_cards import show_main_kpis
 from components.charts import show_forecast_chart
 from components.simulator import show_decision_simulator
 from components.copilot import show_financial_copilot
+from components.agent import show_cfo_agent
 from engines.financing_readiness import calculate_financing_readiness
 from utils.excel_converter import convert_to_cfo_template
 from utils.import_engine import validate_excel
@@ -215,6 +216,12 @@ with st.expander("لماذا حصلت الشركة على هذه الدرجة؟"
         ("هذا مؤشر داعم للقرار فقط. قرار الائتمان النهائي يتطلب مراجعة بشرية ومستندات إضافية."
          if is_arabic else "Decision-support indicator only. Final credit decisions require human review and additional documents.")
     )
+    st.markdown("**ما الذي قد يمنع التمويل:**" if is_arabic else "**What may prevent financing:**")
+    for blocker in financing.get("blockers", []):
+        st.write(f"- {blocker}")
+    st.markdown("**كيف يمكن رفع الدرجة:**" if is_arabic else "**How to improve the score:**")
+    for action in financing.get("improvement_actions", []):
+        st.write(f"- {action}")
 
 st.divider()
 
@@ -341,6 +348,10 @@ Risk: **{best_decision["Risk"]}** | Confidence: **{best_decision["Confidence"]}*
 recommendation = generate_recommendation(best_decision, metrics, language)
 
 st.info(recommendation)
+
+st.divider()
+
+show_cfo_agent(metrics, health, financing, forecast, ranking, best_decision, recommendation, language)
 
 st.divider()
 

@@ -41,6 +41,40 @@ def calculate_financing_readiness(metrics, health):
 
     suggested_limit = max(0, min(metrics.get("total_sales", 0) * 0.20, profit * 2))
 
+    blockers = []
+    improvement_actions = []
+
+    if margin < 15:
+        blockers.append("Profit margin is below the preferred financing threshold.")
+        improvement_actions.append("Improve pricing, reduce direct costs, or focus on higher-margin products.")
+    elif margin < 25:
+        improvement_actions.append("Raise profit margin toward 25-30% to strengthen financing confidence.")
+
+    if expense_ratio > 0.80:
+        blockers.append("Operating expenses consume most of the revenue.")
+        improvement_actions.append("Reduce non-critical expenses and review the largest expense categories first.")
+    elif expense_ratio > 0.65:
+        improvement_actions.append("Improve cost efficiency by controlling recurring operating expenses.")
+
+    if overdue_ratio > 0.20:
+        blockers.append("Overdue invoices may pressure cash flow.")
+        improvement_actions.append("Improve collections and reduce overdue invoices below 20%.")
+    elif overdue_ratio > 0.10:
+        improvement_actions.append("Keep improving invoice collection speed to reduce cash-flow risk.")
+
+    if float(health.get("score", 0)) < 70:
+        blockers.append("Financial health score is not yet strong enough for a confident review.")
+        improvement_actions.append("Improve financial health through profitability, cost control, and collections.")
+
+    if profit <= 0:
+        blockers.append("The company is not currently profitable.")
+        improvement_actions.append("Reach consistent positive net profit before requesting larger financing limits.")
+
+    if not blockers:
+        blockers.append("No major blocker detected from the uploaded financial data.")
+    if not improvement_actions:
+        improvement_actions.append("Maintain profitability, keep expenses controlled, and monitor collections monthly.")
+
     return {
         "score": score,
         "grade": grade,
@@ -48,4 +82,6 @@ def calculate_financing_readiness(metrics, health):
         "recommendation": recommendation,
         "suggested_limit": suggested_limit,
         "factors": factors,
+        "blockers": blockers,
+        "improvement_actions": improvement_actions,
     }
