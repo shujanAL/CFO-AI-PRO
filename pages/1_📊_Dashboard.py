@@ -26,6 +26,7 @@ from components.copilot import show_financial_copilot
 from components.agent import show_cfo_agent
 from engines.financing_readiness import calculate_financing_readiness
 from utils.excel_converter import convert_to_cfo_template
+from utils.finance_text import finance_text
 from utils.import_engine import validate_excel
 from utils.i18n import sar, tr
 
@@ -218,10 +219,10 @@ with st.expander("لماذا حصلت الشركة على هذه الدرجة؟"
     )
     st.markdown("**ما الذي قد يمنع التمويل:**" if is_arabic else "**What may prevent financing:**")
     for blocker in financing.get("blockers", []):
-        st.write(f"- {blocker}")
+        st.write(f"- {finance_text(blocker, language)}")
     st.markdown("**كيف يمكن رفع الدرجة:**" if is_arabic else "**How to improve the score:**")
     for action in financing.get("improvement_actions", []):
-        st.write(f"- {action}")
+        st.write(f"- {finance_text(action, language)}")
 
 st.divider()
 

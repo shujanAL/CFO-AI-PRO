@@ -3,6 +3,7 @@ import streamlit as st
 from components.copilot import build_copilot_context
 from engines.local_ai import ask_local_ai, is_ollama_available
 from engines.rule_based_copilot import ask_rule_based_copilot, is_verified_financial_question
+from utils.finance_text import finance_text, trend_text
 from utils.i18n import sar, tr
 
 
@@ -21,6 +22,7 @@ def _forecast_trend(forecast):
 def _agent_summary(metrics, health, financing, forecast, best_decision, language="en"):
     is_ar = language == "ar"
     trend = _forecast_trend(forecast)
+    displayed_trend = trend_text(trend, language)
     if is_ar:
         return f"""
 ### نتيجة CFO AI Agent
@@ -28,7 +30,7 @@ def _agent_summary(metrics, health, financing, forecast, best_decision, language
 - تم قراءة بيانات الشركة والتحقق منها.
 - الصحة المالية: **{health.get("score", 0)}/100 - {tr(health.get("status", ""), language)}**
 - جاهزية التمويل البنكي: **{financing.get("score", 0)}/100 - Grade {financing.get("grade", "N/A")}**
-- اتجاه التوقعات: **{tr(trend, language)}**
+- اتجاه التوقعات: **{displayed_trend}**
 - أفضل قرار مقترح: **{tr(best_decision.get("Decision", "N/A"), language)}**
 - الربح المتوقع بعد القرار: **{sar(best_decision.get("Expected Profit", 0), language)}**
 
@@ -91,10 +93,10 @@ def show_cfo_agent(metrics, health, financing, forecast, ranking, best_decision,
         with st.expander("Financing blockers and improvement plan" if not is_ar else "عوائق التمويل وخطة التحسين", expanded=True):
             st.markdown("**What may prevent financing:**" if not is_ar else "**ما الذي قد يمنع التمويل:**")
             for blocker in financing.get("blockers", []):
-                st.write(f"- {blocker}")
+                st.write(f"- {finance_text(blocker, language)}")
             st.markdown("**How to improve the score:**" if not is_ar else "**كيف يمكن رفع الدرجة:**")
             for action in financing.get("improvement_actions", []):
-                st.write(f"- {action}")
+                st.write(f"- {finance_text(action, language)}")
 
         if request.strip():
             context = build_copilot_context(metrics, health, forecast, ranking, best_decision, financing, recommendation)

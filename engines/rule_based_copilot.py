@@ -36,6 +36,8 @@ def is_verified_financial_question(question):
     q = question.lower()
     return _has(q, [
         "health", "score", "why", "risk", "financ", "loan", "bank", "credit",
+        "improve", "management", "decision", "best", "first", "next 30 days",
+        "تحسين", "الإدارة", "ادارة", "قرار", "أفضل", "افضل", "أول", "اول", "أولاً", "اولا",
         "صحة", "درجة", "ليش", "لماذا", "مخاطر", "خطر", "تمويل", "بنك", "قرض", "ائتمان",
     ])
 
