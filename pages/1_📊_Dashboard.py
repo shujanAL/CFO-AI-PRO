@@ -74,7 +74,6 @@ with st.sidebar:
             ("رفع الملفات", "⇧", "file-upload"),
             ("المؤشرات المالية", "▣", "financial-indicators"),
             ("تحليلات الأعمال", "◈", "business-analytics"),
-            ("المستشار الذكي", "✦", "ai-advisor"),
             ("توقعات المبيعات", "⌁", "sales-forecast"),
             ("محاكاة القرارات", "⚙", "decision-simulator"),
         ]
@@ -84,9 +83,21 @@ with st.sidebar:
             ("File Upload", "⇧", "file-upload"),
             ("Financial Indicators", "▣", "financial-indicators"),
             ("Business Analytics", "◈", "business-analytics"),
-            ("AI Advisor", "✦", "ai-advisor"),
             ("Sales Forecast", "⌁", "sales-forecast"),
             ("Decision Simulator", "⚙", "decision-simulator"),
+        ]
+    )
+    ai_nav_items = (
+        [
+            ("AI Recommendations", "💡", "ai-recommendations"),
+            ("Financial Copilot", "💬", "financial-copilot"),
+            ("CFO AI Agent", "🤖", "cfo-agent"),
+        ]
+        if is_arabic
+        else [
+            ("AI Recommendations", "💡", "ai-recommendations"),
+            ("Financial Copilot", "💬", "financial-copilot"),
+            ("CFO AI Agent", "🤖", "cfo-agent"),
         ]
     )
     nav_links = []
@@ -97,11 +108,20 @@ with st.sidebar:
             f'<span>{label}</span><span class="cfo-nav-icon">{icon}</span></a>'
         )
     nav_html = "".join(nav_links)
+    ai_nav_html = "".join(
+        f'<a class="cfo-nav-item cfo-nav-subitem" href="#{anchor}">'
+        f'<span>{label}</span><span class="cfo-nav-icon">{icon}</span></a>'
+        for label, icon, anchor in ai_nav_items
+    )
     st.markdown(
         f"""
         <div class="cfo-nav-title">{"لوحة التحكم" if is_arabic else "Navigation"}</div>
         <nav class="cfo-nav" dir="{"rtl" if is_arabic else "ltr"}">
             {nav_html}
+        </nav>
+        <div class="cfo-nav-title cfo-ai-hub-nav-title">🤖 AI Hub</div>
+        <nav class="cfo-nav" dir="{"rtl" if is_arabic else "ltr"}">
+            {ai_nav_html}
         </nav>
         """,
         unsafe_allow_html=True,
@@ -115,6 +135,32 @@ def load_css():
 
 def section_anchor(anchor: str):
     st.markdown(f'<span id="{anchor}" class="cfo-anchor"></span>', unsafe_allow_html=True)
+
+
+def show_ai_hub_card(icon, title, description, uses, method, example, direction, uses_label="Uses", method_label="Method"):
+    uses_html = "".join(f"<li>{item}</li>" for item in uses)
+    method_html = "".join(f"<li>{item}</li>" for item in method)
+    st.markdown(
+        f"""
+        <div class="cfo-ai-hub-card" dir="{direction}">
+            <div class="cfo-ai-hub-icon">{icon}</div>
+            <div class="cfo-ai-hub-title">{title}</div>
+            <div class="cfo-ai-hub-description">{description}</div>
+            <div class="cfo-ai-hub-grid">
+                <div>
+                    <div class="cfo-ai-hub-label">{uses_label}</div>
+                    <ul>{uses_html}</ul>
+                </div>
+                <div>
+                    <div class="cfo-ai-hub-label">{method_label}</div>
+                    <ul>{method_html}</ul>
+                </div>
+            </div>
+            <div class="cfo-ai-hub-example">{example}</div>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
 
 
 def show_monthly_sales_chart(sales_df):
@@ -349,8 +395,86 @@ with right:
 
 st.divider()
 
-section_anchor("ai-advisor")
-st.subheader("🤖 المستشار المالي الذكي" if is_arabic else "🤖 AI Financial Advisor")
+section_anchor("ai-hub")
+st.subheader("🤖 AI Hub")
+st.caption(
+    "مركز الذكاء الاصطناعي في CFO AI PRO: توصيات، مساعد مالي، ووكيل CFO مستقل."
+    if is_arabic
+    else "The AI center in CFO AI PRO: recommendations, a financial copilot, and an autonomous CFO agent."
+)
+
+uses_label = "وش يستخدم؟" if is_arabic else "Uses"
+method_label = "الطريقة" if is_arabic else "Method"
+hub_col1, hub_col2, hub_col3 = st.columns(3)
+with hub_col1:
+    show_ai_hub_card(
+        "💡",
+        "AI Recommendations",
+        "توصيات سريعة مبنية على المؤشرات الحالية." if is_arabic else "Fast recommendations based on the current indicators.",
+        [
+            "Financial Health",
+            "Profit Margin",
+            "Expense Ratio",
+            "Overdue Invoices",
+            "Decision Ranking",
+        ],
+        [
+            "يحلل المؤشرات الحالية" if is_arabic else "Reads current indicators",
+            "يحدد الأولويات" if is_arabic else "Prioritizes the next actions",
+            "يعرض السبب والتأثير" if is_arabic else "Explains reason and impact",
+        ],
+        "Example: Reduce overdue invoices to lower cash-flow risk.",
+        hero_dir,
+        uses_label,
+        method_label,
+    )
+with hub_col2:
+    show_ai_hub_card(
+        "💬",
+        "Financial Copilot",
+        "شات مالي يجاوب على أسئلة المستخدم من بيانات الشركة." if is_arabic else "A financial chat assistant that answers from company data.",
+        [
+            "Metrics",
+            "Bank Readiness",
+            "Forecast",
+            "Decision Ranking",
+            "Current Company Data",
+        ],
+        [
+            "يقرأ السؤال" if is_arabic else "Reads the question",
+            "يبني سياقًا ماليًا" if is_arabic else "Builds financial context",
+            "يستخدم Local AI أو Rule-based Engine" if is_arabic else "Uses Local AI or Rule-based Engine",
+        ],
+        "Example: Why is my Financial Health 85/100?",
+        hero_dir,
+        uses_label,
+        method_label,
+    )
+with hub_col3:
+    show_ai_hub_card(
+        "🤖",
+        "CFO AI Agent",
+        "وكيل يشغّل رحلة التحليل كاملة بضغطة واحدة." if is_arabic else "An agent that runs the full analysis workflow in one click.",
+        [
+            "Excel Validation",
+            "Financial Metrics",
+            "Health & Readiness",
+            "Forecast Engine",
+            "Decision Simulator",
+        ],
+        [
+            "يتحقق من الملف" if is_arabic else "Validates the file",
+            "يشغل التحليل والتوقعات" if is_arabic else "Runs analysis and forecast",
+            "يختار أفضل قرار" if is_arabic else "Selects the best decision",
+        ],
+        "Example: Run full CFO analysis for the next 30 days.",
+        hero_dir,
+        uses_label,
+        method_label,
+    )
+
+section_anchor("ai-recommendations")
+st.subheader("💡 AI Recommendations" if not is_arabic else "💡 AI Recommendations")
 
 summary = generate_ai_summary(metrics, language)
 
@@ -452,10 +576,12 @@ st.info(recommendation)
 
 st.divider()
 
+section_anchor("cfo-agent")
 show_cfo_agent(metrics, health, financing, forecast, ranking, best_decision, recommendation, language)
 
 st.divider()
 
+section_anchor("financial-copilot")
 show_financial_copilot(metrics, health, forecast, ranking, best_decision, financing, recommendation, language)
 
 st.divider()
