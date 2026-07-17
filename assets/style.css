@@ -485,85 +485,6 @@ hr {
     font-weight: 650;
 }
 
-.cfo-ai-hub-card {
-    min-height: auto;
-    border: 1px solid rgba(91, 18, 53, .10);
-    border-radius: 26px;
-    background:
-        radial-gradient(circle at 12% 0%, rgba(184, 137, 84, .14), transparent 30%),
-        linear-gradient(180deg, #ffffff 0%, #fffdfa 100%);
-    box-shadow: 0 14px 34px rgba(43, 24, 63, .065);
-    padding: 1rem;
-    margin-bottom: .85rem;
-    transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
-}
-
-.cfo-ai-hub-card:hover {
-    transform: translateY(-4px);
-    box-shadow: var(--cfo-shadow-hover);
-    border-color: rgba(91, 18, 53, .22);
-}
-
-.cfo-ai-hub-icon {
-    width: 46px;
-    height: 46px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 16px;
-    background: linear-gradient(135deg, var(--cfo-burgundy), var(--cfo-purple));
-    color: #fff;
-    font-size: 1.25rem;
-    box-shadow: 0 12px 28px rgba(91, 18, 53, .18);
-}
-
-.cfo-ai-hub-title {
-    margin-top: .75rem;
-    color: var(--cfo-purple);
-    font-weight: 900;
-    font-size: 1.05rem;
-}
-
-.cfo-ai-hub-description {
-    margin-top: .35rem;
-    color: var(--cfo-muted);
-    font-weight: 650;
-    line-height: 1.55;
-}
-
-.cfo-ai-hub-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: .75rem;
-    margin-top: .85rem;
-}
-
-.cfo-ai-hub-label {
-    color: var(--cfo-burgundy);
-    font-weight: 900;
-    font-size: .82rem;
-    margin-bottom: .35rem;
-}
-
-.cfo-ai-hub-card ul {
-    margin: 0;
-    padding-inline-start: 1rem;
-    color: var(--cfo-ink);
-    font-size: .82rem;
-    line-height: 1.55;
-}
-
-.cfo-ai-hub-example {
-    margin-top: .85rem;
-    border: 1px solid rgba(91, 18, 53, .10);
-    border-radius: 16px;
-    background: rgba(91, 18, 53, .045);
-    color: var(--cfo-purple);
-    font-weight: 800;
-    font-size: .83rem;
-    padding: .65rem .75rem;
-}
-
 [data-testid="stVerticalBlock"] {
     gap: .75rem;
 }
@@ -674,11 +595,4 @@ hr {
         top: -70px;
     }
 
-    .cfo-ai-hub-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .cfo-ai-hub-card {
-        min-height: auto;
-    }
 }
