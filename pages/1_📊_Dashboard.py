@@ -76,7 +76,7 @@ with st.sidebar:
             ("تحليلات الأعمال", "◈", "business-analytics"),
             ("توقعات المبيعات", "⌁", "sales-forecast"),
             ("محاكاة القرارات", "⚙", "decision-simulator"),
-            ("Executive Report", "📄", "executive-report"),
+            ("التقرير التنفيذي", "📄", "executive-report"),
         ]
         if is_arabic
         else [
@@ -166,32 +166,6 @@ def apply_language_layout(is_arabic_layout: bool):
 
 def section_anchor(anchor: str):
     st.markdown(f'<span id="{anchor}" class="cfo-anchor"></span>', unsafe_allow_html=True)
-
-
-def show_ai_hub_card(icon, title, description, uses, method, example, direction, uses_label="Uses", method_label="Method"):
-    uses_html = "".join(f"<li>{item}</li>" for item in uses)
-    method_html = "".join(f"<li>{item}</li>" for item in method)
-    st.markdown(
-        f"""
-        <div class="cfo-ai-hub-card" dir="{direction}">
-            <div class="cfo-ai-hub-icon">{icon}</div>
-            <div class="cfo-ai-hub-title">{title}</div>
-            <div class="cfo-ai-hub-description">{description}</div>
-            <div class="cfo-ai-hub-grid">
-                <div>
-                    <div class="cfo-ai-hub-label">{uses_label}</div>
-                    <ul>{uses_html}</ul>
-                </div>
-                <div>
-                    <div class="cfo-ai-hub-label">{method_label}</div>
-                    <ul>{method_html}</ul>
-                </div>
-            </div>
-            <div class="cfo-ai-hub-example">{example}</div>
-        </div>
-        """,
-        unsafe_allow_html=True,
-    )
 
 
 def show_monthly_sales_chart(sales_df):
@@ -430,80 +404,6 @@ with right:
     show_expense_breakdown(expenses)
 
 st.divider()
-
-section_anchor("ai-hub")
-st.subheader("🤖 AI Hub")
-st.caption(
-    "مركز الذكاء الاصطناعي في CFO AI PRO: توصيات، مساعد مالي، ووكيل CFO مستقل."
-    if is_arabic
-    else "The AI center in CFO AI PRO: recommendations, a financial copilot, and an autonomous CFO agent."
-)
-
-uses_label = "وش يستخدم؟" if is_arabic else "Uses"
-method_label = "الطريقة" if is_arabic else "Method"
-show_ai_hub_card(
-    "💡",
-    "AI Recommendations",
-    "توصيات سريعة مبنية على المؤشرات الحالية." if is_arabic else "Fast recommendations based on the current indicators.",
-    [
-        "Financial Health",
-        "Profit Margin",
-        "Expense Ratio",
-        "Overdue Invoices",
-        "Decision Ranking",
-    ],
-    [
-        "يحلل المؤشرات الحالية" if is_arabic else "Reads current indicators",
-        "يحدد الأولويات" if is_arabic else "Prioritizes the next actions",
-        "يعرض السبب والتأثير" if is_arabic else "Explains reason and impact",
-    ],
-    "Example: Reduce overdue invoices to lower cash-flow risk.",
-    hero_dir,
-    uses_label,
-    method_label,
-)
-show_ai_hub_card(
-    "💬",
-    "Financial Copilot",
-    "شات مالي يجاوب على أسئلة المستخدم من بيانات الشركة." if is_arabic else "A financial chat assistant that answers from company data.",
-    [
-        "Metrics",
-        "Bank Readiness",
-        "Forecast",
-        "Decision Ranking",
-        "Current Company Data",
-    ],
-    [
-        "يقرأ السؤال" if is_arabic else "Reads the question",
-        "يبني سياقًا ماليًا" if is_arabic else "Builds financial context",
-        "يستخدم Local AI أو Rule-based Engine" if is_arabic else "Uses Local AI or Rule-based Engine",
-    ],
-    "Example: Why is my Financial Health 85/100?",
-    hero_dir,
-    uses_label,
-    method_label,
-)
-show_ai_hub_card(
-    "🤖",
-    "CFO AI Agent",
-    "وكيل يشغّل رحلة التحليل كاملة بضغطة واحدة." if is_arabic else "An agent that runs the full analysis workflow in one click.",
-    [
-        "Excel Validation",
-        "Financial Metrics",
-        "Health & Readiness",
-        "Forecast Engine",
-        "Decision Simulator",
-    ],
-    [
-        "يتحقق من الملف" if is_arabic else "Validates the file",
-        "يشغل التحليل والتوقعات" if is_arabic else "Runs analysis and forecast",
-        "يختار أفضل قرار" if is_arabic else "Selects the best decision",
-    ],
-    "Example: Run full CFO analysis for the next 30 days.",
-    hero_dir,
-    uses_label,
-    method_label,
-)
 
 section_anchor("ai-recommendations")
 st.subheader("💡 AI Recommendations")
