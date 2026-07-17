@@ -11,8 +11,8 @@
     --cfo-muted: #706777;
     --cfo-border: #e7ded2;
     --cfo-success: #22745f;
-    --cfo-shadow: 0 18px 45px rgba(43, 24, 63, .08);
-    --cfo-shadow-hover: 0 22px 58px rgba(91, 18, 53, .15);
+    --cfo-shadow: 0 14px 34px rgba(43, 24, 63, .065);
+    --cfo-shadow-hover: 0 18px 46px rgba(91, 18, 53, .12);
 }
 
 html, body, .stApp {
@@ -77,9 +77,9 @@ p, label, span, div {
     position: relative;
     overflow: hidden;
     border: 1px solid rgba(91, 18, 53, .10);
-    border-radius: 24px;
-    padding: .95rem 1.2rem;
-    margin: .15rem 0 .85rem;
+    border-radius: 22px;
+    padding: .72rem 1rem;
+    margin: .05rem 0 .7rem;
     background:
         radial-gradient(circle at 8% 20%, rgba(184, 137, 84, .24), transparent 24%),
         linear-gradient(135deg, #ffffff 0%, #fbf7f0 46%, #f5efe5 100%);
@@ -90,9 +90,9 @@ p, label, span, div {
     content: "";
     position: absolute;
     inset-inline-end: -70px;
-    top: -90px;
-    width: 180px;
-    height: 180px;
+    top: -104px;
+    width: 160px;
+    height: 160px;
     border-radius: 999px;
     background: rgba(91, 18, 53, .12);
 }
@@ -110,18 +110,18 @@ p, label, span, div {
 }
 
 .cfo-hero-title {
-    margin: .42rem 0 .18rem;
+    margin: .34rem 0 .12rem;
     color: var(--cfo-purple);
     font-weight: 900;
-    font-size: clamp(1.45rem, 2.7vw, 2.25rem);
+    font-size: clamp(1.35rem, 2.35vw, 2rem);
     line-height: 1.05;
 }
 
 .cfo-hero-subtitle {
     max-width: 780px;
     color: var(--cfo-muted);
-    font-size: .95rem;
-    line-height: 1.45;
+    font-size: .9rem;
+    line-height: 1.38;
     margin: 0;
 }
 
@@ -157,11 +157,11 @@ p, label, span, div {
 }
 
 .metric-card {
-    min-height: 132px;
+    min-height: 146px;
     background:
         linear-gradient(180deg, #ffffff 0%, #fffdfa 100%);
     padding: 18px;
-    border-radius: 22px;
+    border-radius: 24px;
     border: 1px solid rgba(91, 18, 53, .09);
     box-shadow: var(--cfo-shadow);
     transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
@@ -174,15 +174,15 @@ p, label, span, div {
 }
 
 .metric-icon {
-    width: 40px;
-    height: 40px;
+    width: 44px;
+    height: 44px;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    border-radius: 14px;
+    border-radius: 15px;
     background: linear-gradient(135deg, var(--cfo-burgundy), var(--cfo-purple));
     color: #fff;
-    font-size: 20px;
+    font-size: 21px;
     box-shadow: 0 10px 24px rgba(91, 18, 53, .22);
 }
 
@@ -199,6 +199,28 @@ p, label, span, div {
     color: var(--cfo-purple);
     margin-top: 6px;
     line-height: 1.1;
+}
+
+.metric-delta {
+    display: inline-flex;
+    align-items: center;
+    width: fit-content;
+    gap: .25rem;
+    margin-top: .55rem;
+    padding: .24rem .55rem;
+    border-radius: 999px;
+    font-size: .8rem;
+    font-weight: 900;
+}
+
+.metric-delta.positive {
+    color: var(--cfo-success);
+    background: rgba(34, 116, 95, .10);
+}
+
+.metric-delta.negative {
+    color: #b4233a;
+    background: rgba(180, 35, 58, .10);
 }
 
 .metric-subtitle {
@@ -272,6 +294,13 @@ div[data-testid="stDownloadButton"] button:hover,
     border-radius: 22px;
     padding: 1rem;
     box-shadow: 0 10px 28px rgba(43, 24, 63, .055);
+}
+
+[data-testid="stMetric"]:hover,
+[data-testid="stExpander"]:hover,
+[data-testid="stDataFrame"]:hover {
+    border-color: rgba(91, 18, 53, .18);
+    box-shadow: 0 14px 34px rgba(43, 24, 63, .075);
 }
 
 [data-testid="stMetricLabel"] {
@@ -376,9 +405,9 @@ hr {
     text-decoration: none !important;
     color: var(--cfo-ink) !important;
     border-radius: 16px;
-    padding: .72rem .85rem;
+    padding: .78rem .9rem;
     border: 1px solid transparent;
-    transition: background .16s ease, color .16s ease, transform .16s ease, border-color .16s ease;
+    transition: background .16s ease, color .16s ease, transform .16s ease, border-color .16s ease, box-shadow .16s ease;
 }
 
 .cfo-nav-item:hover,
@@ -387,17 +416,32 @@ hr {
     color: #fff !important;
     transform: translateX(-2px);
     border-color: rgba(91, 18, 53, .18);
+    box-shadow: 0 10px 22px rgba(91, 18, 53, .14);
 }
 
 .cfo-nav-icon {
     color: inherit;
     opacity: .82;
+    min-width: 32px;
+    width: 32px;
+    height: 32px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    background: rgba(91, 18, 53, .08);
+    font-size: 1.05rem;
+}
+
+.cfo-nav-item:hover .cfo-nav-icon,
+.cfo-nav-item.active .cfo-nav-icon {
+    background: rgba(255, 255, 255, .15);
 }
 
 .cfo-advisor-card {
-    min-height: 124px;
+    min-height: 138px;
     border: 1px solid rgba(91, 18, 53, .10);
-    border-radius: 22px;
+    border-radius: 24px;
     background: linear-gradient(180deg, #ffffff 0%, #fffdfa 100%);
     box-shadow: 0 12px 32px rgba(43, 24, 63, .06);
     padding: 1rem;
@@ -414,13 +458,14 @@ hr {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 36px;
-    height: 36px;
-    border-radius: 14px;
+    width: 42px;
+    height: 42px;
+    border-radius: 15px;
     background: rgba(91, 18, 53, .08);
     color: var(--cfo-burgundy);
     font-weight: 900;
     margin-bottom: .55rem;
+    font-size: 1.2rem;
 }
 
 .cfo-advisor-text {
@@ -436,6 +481,48 @@ hr {
 
 [data-testid="stHorizontalBlock"] {
     gap: .85rem;
+}
+
+[data-testid="stPlotlyChart"] {
+    border: 1px solid rgba(91, 18, 53, .08);
+    border-radius: 24px;
+    background: #ffffff;
+    box-shadow: 0 12px 30px rgba(43, 24, 63, .055);
+    padding: .35rem;
+    overflow: hidden;
+}
+
+[data-testid="stSelectbox"],
+[data-testid="stSlider"],
+[data-testid="stNumberInput"] {
+    background: rgba(255, 255, 255, .74);
+    border-radius: 18px;
+}
+
+[data-testid="stSlider"] [role="slider"] {
+    background: var(--cfo-burgundy) !important;
+    border-color: var(--cfo-burgundy) !important;
+}
+
+.cfo-simulator-intro {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: .7rem;
+    padding: .25rem .15rem .85rem;
+    color: var(--cfo-purple);
+}
+
+.cfo-simulator-badge {
+    display: inline-flex;
+    align-items: center;
+    width: fit-content;
+    padding: .32rem .66rem;
+    border-radius: 999px;
+    background: rgba(91, 18, 53, .08);
+    color: var(--cfo-burgundy);
+    font-weight: 900;
+    font-size: .78rem;
 }
 
 /* Final desktop layout guard:

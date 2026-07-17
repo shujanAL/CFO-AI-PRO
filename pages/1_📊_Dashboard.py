@@ -139,7 +139,7 @@ def show_monthly_sales_chart(sales_df):
     )
 
     fig.update_traces(line=dict(color="#5b1235", width=3), marker=dict(size=8, color="#b88954"))
-    apply_cfo_chart_theme(fig, height=420)
+    apply_cfo_chart_theme(fig, height=470)
     st.plotly_chart(fig, use_container_width=True)
 
 
@@ -164,7 +164,7 @@ def show_expense_breakdown(expenses_df):
         marker=dict(colors=["#5b1235", "#2b183f", "#b88954", "#8a3d5d", "#22745f", "#d8b889"]),
         textfont=dict(color="#211827"),
     )
-    apply_cfo_chart_theme(fig, height=420)
+    apply_cfo_chart_theme(fig, height=470)
     st.plotly_chart(fig, use_container_width=True)
 
 
@@ -262,6 +262,7 @@ except Exception as error:
     st.stop()
 
 metrics = calculate_basic_metrics(sales, expenses, invoices)
+growth = calculate_monthly_growth(sales)
 
 health = calculate_financial_health(
     metrics["profit_margin"],
@@ -270,7 +271,7 @@ health = calculate_financial_health(
 )
 
 section_anchor("financial-indicators")
-show_main_kpis(metrics, health, language)
+show_main_kpis(metrics, health, language, growth)
 
 st.divider()
 
@@ -319,7 +320,6 @@ c1, c2, c3 = st.columns(3)
 c1.metric("متوسط قيمة الفاتورة" if is_arabic else "Average Invoice", sar(calculate_average_invoice(invoices), language))
 c2.metric("متوسط المبيعات الشهرية" if is_arabic else "Average Monthly Sales", sar(calculate_monthly_sales(sales), language))
 
-growth = calculate_monthly_growth(sales)
 c3.metric("النمو الشهري" if is_arabic else "Monthly Growth", f"{growth:.2f}%")
 
 st.divider()
@@ -354,7 +354,7 @@ st.subheader("🤖 المستشار المالي الذكي" if is_arabic else "
 
 summary = generate_ai_summary(metrics, language)
 
-advisor_icons = ["✦", "↗", "✓", "!" ]
+advisor_icons = ["💡", "📈", "✅", "⚠️"]
 advisor_columns = st.columns(min(3, max(1, len(summary))))
 for index, item in enumerate(summary):
     with advisor_columns[index % len(advisor_columns)]:

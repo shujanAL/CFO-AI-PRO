@@ -16,7 +16,7 @@ def apply_cfo_chart_theme(fig, height=420):
         plot_bgcolor="#ffffff",
         font=dict(family="Arial, Tahoma, sans-serif", color="#211827"),
         title=dict(font=dict(size=20, color="#2b183f")),
-        margin=dict(l=24, r=24, t=62, b=36),
+        margin=dict(l=14, r=14, t=48, b=24),
         colorway=CFO_CHART_COLORS,
         legend=dict(bgcolor="rgba(255,255,255,0)", font=dict(color="#706777")),
     )
@@ -50,7 +50,7 @@ def show_monthly_sales_chart(sales_df, language="en"):
         labels={"Date": "الشهر" if ar else "Date", "Amount": "المبلغ" if ar else "Amount"},
     )
     fig.update_traces(line=dict(color="#5b1235", width=3), marker=dict(size=8, color="#b88954"))
-    apply_cfo_chart_theme(fig, height=420)
+    apply_cfo_chart_theme(fig, height=470)
     st.plotly_chart(fig, use_container_width=True)
 
 
@@ -68,7 +68,7 @@ def show_expense_breakdown(expenses_df, language="en"):
         color_discrete_sequence=CFO_CHART_COLORS,
     )
     fig.update_traces(textfont=dict(color="#211827"), marker=dict(line=dict(color="#ffffff", width=2)))
-    apply_cfo_chart_theme(fig, height=420)
+    apply_cfo_chart_theme(fig, height=470)
     st.plotly_chart(fig, use_container_width=True)
 
 
@@ -100,5 +100,5 @@ def show_forecast_chart(history_df, forecast_df, language="en"):
         )
     )
     fig.update_layout(title="توقع الإيرادات" if ar else "Revenue Forecast")
-    apply_cfo_chart_theme(fig, height=450)
+    apply_cfo_chart_theme(fig, height=480)
     st.plotly_chart(fig, use_container_width=True)
