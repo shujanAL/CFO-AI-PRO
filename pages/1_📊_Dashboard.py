@@ -68,17 +68,37 @@ with st.sidebar:
         st.session_state.language = new_language
         st.rerun()
     st.markdown("---")
+    nav_items = (
+        [
+            ("الرئيسية", "⌂"),
+            ("المؤشرات المالية", "▣"),
+            ("تحليلات الأعمال", "◈"),
+            ("المستشار الذكي", "✦"),
+            ("توقعات المبيعات", "⌁"),
+            ("محاكاة القرارات", "⚙"),
+            ("رفع الملفات", "⇧"),
+        ]
+        if is_arabic
+        else [
+            ("Dashboard", "⌂"),
+            ("Financial Indicators", "▣"),
+            ("Business Analytics", "◈"),
+            ("AI Advisor", "✦"),
+            ("Sales Forecast", "⌁"),
+            ("Decision Simulator", "⚙"),
+            ("File Upload", "⇧"),
+        ]
+    )
+    nav_html = "".join(
+        f'<a class="cfo-nav-item {"active" if index == 0 else ""}" href="#"><span>{label}</span><span class="cfo-nav-icon">{icon}</span></a>'
+        for index, (label, icon) in enumerate(nav_items)
+    )
     st.markdown(
-        """
-        <div style="color:#5b1235;font-weight:800;margin-bottom:.45rem;">Navigation</div>
-        <div style="color:#706777;line-height:2;">
-            ◦ Dashboard<br>
-            ◦ Financial Health<br>
-            ◦ Bank Readiness<br>
-            ◦ AI Advisor<br>
-            ◦ Decision Simulator<br>
-            ◦ Executive Report
-        </div>
+        f"""
+        <div class="cfo-nav-title">{"لوحة التحكم" if is_arabic else "Navigation"}</div>
+        <nav class="cfo-nav" dir="{"rtl" if is_arabic else "ltr"}">
+            {nav_html}
+        </nav>
         """,
         unsafe_allow_html=True,
     )
@@ -319,8 +339,19 @@ st.subheader("🤖 المستشار المالي الذكي" if is_arabic else "
 
 summary = generate_ai_summary(metrics, language)
 
-for item in summary:
-    st.info(item)
+advisor_icons = ["✦", "↗", "✓", "!" ]
+advisor_columns = st.columns(min(3, max(1, len(summary))))
+for index, item in enumerate(summary):
+    with advisor_columns[index % len(advisor_columns)]:
+        st.markdown(
+            f"""
+            <div class="cfo-advisor-card" dir="{hero_dir}">
+                <div class="cfo-advisor-icon">{advisor_icons[index % len(advisor_icons)]}</div>
+                <div class="cfo-advisor-text">{item}</div>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
 
 st.divider()
 
