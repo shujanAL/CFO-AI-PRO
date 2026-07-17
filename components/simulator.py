@@ -13,6 +13,21 @@ def show_decision_simulator(metrics, health, expenses_df, language="en"):
     label = lambda en, ar_text: ar_text if ar else en
     fmt = lambda value: tr(value, language)
 
+    def percentage_change_slider(key):
+        st.markdown(
+            f'<div class="cfo-slider-label">{label("Percentage Change (%)", "نسبة التغيير (%)")}</div>',
+            unsafe_allow_html=True,
+        )
+        return st.slider(
+            label("Percentage Change (%)", "نسبة التغيير (%)"),
+            min_value=0,
+            max_value=100,
+            value=10,
+            step=1,
+            key=key,
+            label_visibility="collapsed",
+        )
+
     st.divider()
     st.subheader(label("🧮 CFO Decision Simulator", "🧮 محاكي قرارات المدير المالي"))
     st.caption(label(
@@ -43,7 +58,7 @@ def show_decision_simulator(metrics, health, expenses_df, language="en"):
                 action = st.selectbox(label("Scenario", "السيناريو"), ["Increase Sales", "Decrease Sales"], format_func=fmt)
             with right:
                 st.markdown("&nbsp;", unsafe_allow_html=True)
-            percentage = st.slider(label("Percentage Change (%)", "نسبة التغيير (%)"), 0, 100, 10)
+            percentage = percentage_change_slider("revenue_percentage_change")
         elif scenario_type == "Expenses":
             col1, col2 = st.columns([1, 1])
             with col1:
@@ -51,7 +66,7 @@ def show_decision_simulator(metrics, health, expenses_df, language="en"):
                                         ["Salaries", "Marketing", "Inventory", "Rent", "Utilities", "Software"], format_func=fmt)
             with col2:
                 action = st.selectbox(label("Scenario", "السيناريو"), ["Increase Expense", "Reduce Expense"], format_func=fmt)
-            percentage = st.slider(label("Percentage Change (%)", "نسبة التغيير (%)"), 0, 100, 10)
+            percentage = percentage_change_slider("expense_percentage_change")
         else:
             col1, col2 = st.columns(2)
             with col1:

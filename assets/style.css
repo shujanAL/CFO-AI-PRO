@@ -514,6 +514,27 @@ hr {
     border-color: var(--cfo-burgundy) !important;
 }
 
+.cfo-slider-label {
+    display: block;
+    margin: .75rem 0 .35rem;
+    color: var(--cfo-purple);
+    font-weight: 850;
+    text-align: inherit;
+}
+
+[data-testid="stSlider"] {
+    direction: ltr !important;
+    padding: .15rem .1rem .55rem;
+}
+
+[data-testid="stSlider"] > div {
+    direction: ltr !important;
+}
+
+[data-testid="stSlider"] [data-testid="stTickBar"] {
+    direction: ltr !important;
+}
+
 .cfo-simulator-intro {
     display: flex;
     align-items: center;
