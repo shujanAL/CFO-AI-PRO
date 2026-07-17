@@ -135,6 +135,35 @@ def load_css():
         st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
 
 
+def apply_language_layout(is_arabic_layout: bool):
+    if is_arabic_layout:
+        return
+    st.markdown(
+        """
+        <style>
+        @media (min-width: 900px) {
+            section[data-testid="stSidebar"],
+            [data-testid="stSidebar"] {
+                left: 0 !important;
+                right: auto !important;
+                inset-inline-start: 0 !important;
+                inset-inline-end: auto !important;
+                border-inline-end: 1px solid var(--cfo-border) !important;
+                border-inline-start: 0 !important;
+                box-shadow: 18px 0 40px rgba(43, 24, 63, .045) !important;
+            }
+
+            [data-testid="stAppViewContainer"] {
+                padding-left: var(--cfo-sidebar-width) !important;
+                padding-right: 0 !important;
+            }
+        }
+        </style>
+        """,
+        unsafe_allow_html=True,
+    )
+
+
 def section_anchor(anchor: str):
     st.markdown(f'<span id="{anchor}" class="cfo-anchor"></span>', unsafe_allow_html=True)
 
@@ -217,6 +246,7 @@ def show_expense_breakdown(expenses_df):
 
 
 load_css()
+apply_language_layout(is_arabic)
 
 section_anchor("dashboard")
 
@@ -586,7 +616,7 @@ section_anchor("executive-report")
 st.subheader("📄 التقرير التنفيذي" if is_arabic else "📄 Executive Report")
 
 if st.button("إنشاء التقرير التنفيذي" if is_arabic else "Generate Executive Report"):
-    pdf_path = generate_pdf(metrics, health, best_decision)
+    pdf_path = generate_pdf(metrics, health, best_decision, language)
 
     with open(pdf_path, "rb") as file:
         st.download_button(
