@@ -42,16 +42,16 @@ def show_decision_simulator(metrics, health, expenses_df, language="en"):
             with left:
                 action = st.selectbox(label("Scenario", "السيناريو"), ["Increase Sales", "Decrease Sales"], format_func=fmt)
             with right:
-                percentage = st.slider(label("Percentage Change", "نسبة التغيير"), 0, 50, 10)
+                st.markdown("&nbsp;", unsafe_allow_html=True)
+            percentage = st.slider(label("Percentage Change (%)", "نسبة التغيير (%)"), 0, 100, 10)
         elif scenario_type == "Expenses":
-            col1, col2, col3 = st.columns([1, 1, 1.2])
+            col1, col2 = st.columns([1, 1])
             with col1:
                 category = st.selectbox(label("Expense Category", "فئة المصروف"),
                                         ["Salaries", "Marketing", "Inventory", "Rent", "Utilities", "Software"], format_func=fmt)
             with col2:
                 action = st.selectbox(label("Scenario", "السيناريو"), ["Increase Expense", "Reduce Expense"], format_func=fmt)
-            with col3:
-                percentage = st.slider(label("Percentage Change", "نسبة التغيير"), 0, 50, 10)
+            percentage = st.slider(label("Percentage Change (%)", "نسبة التغيير (%)"), 0, 100, 10)
         else:
             col1, col2 = st.columns(2)
             with col1:
