@@ -616,7 +616,7 @@ section_anchor("executive-report")
 st.subheader("📄 التقرير التنفيذي" if is_arabic else "📄 Executive Report")
 
 if st.button("إنشاء التقرير التنفيذي" if is_arabic else "Generate Executive Report"):
-    pdf_path = generate_pdf(metrics, health, best_decision, language)
+    pdf_path = generate_pdf(metrics, health, best_decision, "en")
 
     with open(pdf_path, "rb") as file:
         st.download_button(

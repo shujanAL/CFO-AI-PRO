@@ -5,5 +5,3 @@ plotly
 scikit-learn
 openpyxl
 reportlab
-arabic-reshaper
-python-bidi
