@@ -76,6 +76,7 @@ with st.sidebar:
             ("تحليلات الأعمال", "◈", "business-analytics"),
             ("توقعات المبيعات", "⌁", "sales-forecast"),
             ("محاكاة القرارات", "⚙", "decision-simulator"),
+            ("Executive Report", "📄", "executive-report"),
         ]
         if is_arabic
         else [
@@ -85,6 +86,7 @@ with st.sidebar:
             ("Business Analytics", "◈", "business-analytics"),
             ("Sales Forecast", "⌁", "sales-forecast"),
             ("Decision Simulator", "⚙", "decision-simulator"),
+            ("Executive Report", "📄", "executive-report"),
         ]
     )
     ai_nav_items = (
@@ -315,6 +317,10 @@ health = calculate_financial_health(
     metrics["expense_ratio"],
     metrics["overdue_ratio"]
 )
+forecast = forecast_monthly_sales(sales, months_ahead=3)
+ranking = rank_decisions(metrics, expenses)
+best_decision = ranking.iloc[0]
+recommendation = generate_recommendation(best_decision, metrics, language)
 
 section_anchor("financial-indicators")
 show_main_kpis(metrics, health, language, growth)
@@ -405,76 +411,72 @@ st.caption(
 
 uses_label = "وش يستخدم؟" if is_arabic else "Uses"
 method_label = "الطريقة" if is_arabic else "Method"
-hub_col1, hub_col2, hub_col3 = st.columns(3)
-with hub_col1:
-    show_ai_hub_card(
-        "💡",
-        "AI Recommendations",
-        "توصيات سريعة مبنية على المؤشرات الحالية." if is_arabic else "Fast recommendations based on the current indicators.",
-        [
-            "Financial Health",
-            "Profit Margin",
-            "Expense Ratio",
-            "Overdue Invoices",
-            "Decision Ranking",
-        ],
-        [
-            "يحلل المؤشرات الحالية" if is_arabic else "Reads current indicators",
-            "يحدد الأولويات" if is_arabic else "Prioritizes the next actions",
-            "يعرض السبب والتأثير" if is_arabic else "Explains reason and impact",
-        ],
-        "Example: Reduce overdue invoices to lower cash-flow risk.",
-        hero_dir,
-        uses_label,
-        method_label,
-    )
-with hub_col2:
-    show_ai_hub_card(
-        "💬",
-        "Financial Copilot",
-        "شات مالي يجاوب على أسئلة المستخدم من بيانات الشركة." if is_arabic else "A financial chat assistant that answers from company data.",
-        [
-            "Metrics",
-            "Bank Readiness",
-            "Forecast",
-            "Decision Ranking",
-            "Current Company Data",
-        ],
-        [
-            "يقرأ السؤال" if is_arabic else "Reads the question",
-            "يبني سياقًا ماليًا" if is_arabic else "Builds financial context",
-            "يستخدم Local AI أو Rule-based Engine" if is_arabic else "Uses Local AI or Rule-based Engine",
-        ],
-        "Example: Why is my Financial Health 85/100?",
-        hero_dir,
-        uses_label,
-        method_label,
-    )
-with hub_col3:
-    show_ai_hub_card(
-        "🤖",
-        "CFO AI Agent",
-        "وكيل يشغّل رحلة التحليل كاملة بضغطة واحدة." if is_arabic else "An agent that runs the full analysis workflow in one click.",
-        [
-            "Excel Validation",
-            "Financial Metrics",
-            "Health & Readiness",
-            "Forecast Engine",
-            "Decision Simulator",
-        ],
-        [
-            "يتحقق من الملف" if is_arabic else "Validates the file",
-            "يشغل التحليل والتوقعات" if is_arabic else "Runs analysis and forecast",
-            "يختار أفضل قرار" if is_arabic else "Selects the best decision",
-        ],
-        "Example: Run full CFO analysis for the next 30 days.",
-        hero_dir,
-        uses_label,
-        method_label,
-    )
+show_ai_hub_card(
+    "💡",
+    "AI Recommendations",
+    "توصيات سريعة مبنية على المؤشرات الحالية." if is_arabic else "Fast recommendations based on the current indicators.",
+    [
+        "Financial Health",
+        "Profit Margin",
+        "Expense Ratio",
+        "Overdue Invoices",
+        "Decision Ranking",
+    ],
+    [
+        "يحلل المؤشرات الحالية" if is_arabic else "Reads current indicators",
+        "يحدد الأولويات" if is_arabic else "Prioritizes the next actions",
+        "يعرض السبب والتأثير" if is_arabic else "Explains reason and impact",
+    ],
+    "Example: Reduce overdue invoices to lower cash-flow risk.",
+    hero_dir,
+    uses_label,
+    method_label,
+)
+show_ai_hub_card(
+    "💬",
+    "Financial Copilot",
+    "شات مالي يجاوب على أسئلة المستخدم من بيانات الشركة." if is_arabic else "A financial chat assistant that answers from company data.",
+    [
+        "Metrics",
+        "Bank Readiness",
+        "Forecast",
+        "Decision Ranking",
+        "Current Company Data",
+    ],
+    [
+        "يقرأ السؤال" if is_arabic else "Reads the question",
+        "يبني سياقًا ماليًا" if is_arabic else "Builds financial context",
+        "يستخدم Local AI أو Rule-based Engine" if is_arabic else "Uses Local AI or Rule-based Engine",
+    ],
+    "Example: Why is my Financial Health 85/100?",
+    hero_dir,
+    uses_label,
+    method_label,
+)
+show_ai_hub_card(
+    "🤖",
+    "CFO AI Agent",
+    "وكيل يشغّل رحلة التحليل كاملة بضغطة واحدة." if is_arabic else "An agent that runs the full analysis workflow in one click.",
+    [
+        "Excel Validation",
+        "Financial Metrics",
+        "Health & Readiness",
+        "Forecast Engine",
+        "Decision Simulator",
+    ],
+    [
+        "يتحقق من الملف" if is_arabic else "Validates the file",
+        "يشغل التحليل والتوقعات" if is_arabic else "Runs analysis and forecast",
+        "يختار أفضل قرار" if is_arabic else "Selects the best decision",
+    ],
+    "Example: Run full CFO analysis for the next 30 days.",
+    hero_dir,
+    uses_label,
+    method_label,
+)
 
 section_anchor("ai-recommendations")
-st.subheader("💡 AI Recommendations" if not is_arabic else "💡 AI Recommendations")
+st.subheader("💡 AI Recommendations")
 
 summary = generate_ai_summary(metrics, language)
 
@@ -494,10 +496,19 @@ for index, item in enumerate(summary):
 
 st.divider()
 
+section_anchor("financial-copilot")
+show_financial_copilot(metrics, health, forecast, ranking, best_decision, financing, recommendation, language)
+
+st.divider()
+
+section_anchor("cfo-agent")
+show_cfo_agent(metrics, health, financing, forecast, ranking, best_decision, recommendation, language)
+
+st.divider()
+
 section_anchor("sales-forecast")
 st.subheader("🔮 توقع المبيعات" if is_arabic else "🔮 Sales Forecast")
 
-forecast = forecast_monthly_sales(sales, months_ahead=3)
 show_forecast_chart(sales, forecast, language)
 st.divider()
 
@@ -517,8 +528,6 @@ st.divider()
 
 st.subheader("🏆 ترتيب القرارات الذكي" if is_arabic else "🏆 AI Decision Ranking")
 
-ranking = rank_decisions(metrics, expenses)
-
 ranking_display = ranking.copy()
 if is_arabic:
     ranking_display["Decision"] = ranking_display["Decision"].map(lambda value: tr(value, language))
@@ -536,7 +545,6 @@ if is_arabic:
     ranking_display = ranking_display.rename(columns={"Decision": "القرار", "Category": "الفئة", "Value": "القيمة", "Expected Profit": "الربح المتوقع", "Profit Change": "تغير الربح", "Health": "الصحة المالية", "Risk": "المخاطر", "Confidence": "الثقة", "Assumption": "الافتراض", "Decision Score": "درجة القرار"})
 st.dataframe(ranking_display.head(10), use_container_width=True)
 
-best_decision = ranking.iloc[0]
 confidence_ar = {"High": "عالية", "Medium": "متوسطة", "Low": "منخفضة"}.get(
     best_decision["Confidence"], best_decision["Confidence"]
 )
@@ -570,19 +578,7 @@ Financial Health: **{best_decision["Health"]}**
 Risk: **{best_decision["Risk"]}** | Confidence: **{best_decision["Confidence"]}**
 """)
 
-recommendation = generate_recommendation(best_decision, metrics, language)
-
 st.info(recommendation)
-
-st.divider()
-
-section_anchor("cfo-agent")
-show_cfo_agent(metrics, health, financing, forecast, ranking, best_decision, recommendation, language)
-
-st.divider()
-
-section_anchor("financial-copilot")
-show_financial_copilot(metrics, health, forecast, ranking, best_decision, financing, recommendation, language)
 
 st.divider()
 

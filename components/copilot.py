@@ -54,7 +54,7 @@ def build_copilot_context(metrics, health, forecast, ranking, best_decision, fin
 
 def show_financial_copilot(metrics, health, forecast, ranking, best_decision, financing, recommendation, language="en"):
     is_ar = language == "ar"
-    st.subheader("💬 المساعد المالي CFO AI" if is_ar else "💬 Financial Copilot")
+    st.subheader("💬 Financial Copilot")
     st.caption(
         "يسأل عن التحليل الحالي فقط. إذا كان Ollama يعمل محليًا يستخدم Local AI، وإذا لم يعمل يستخدم مساعدًا منطقيًا مبنيًا على القواعد."
         if is_ar

@@ -52,7 +52,7 @@ Advice: run the recommendation as a controlled pilot, then monitor profit, colle
 
 def show_cfo_agent(metrics, health, financing, forecast, ranking, best_decision, recommendation, language="en"):
     is_ar = language == "ar"
-    st.subheader("🤖 CFO AI Agent" if not is_ar else "🤖 وكيل CFO AI")
+    st.subheader("🤖 CFO AI Agent")
     st.caption(
         "One-click agent that validates the company data, reads the analysis, ranks scenarios, explains financing readiness, and answers management questions."
         if not is_ar

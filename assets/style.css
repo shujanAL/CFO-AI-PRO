@@ -486,7 +486,7 @@ hr {
 }
 
 .cfo-ai-hub-card {
-    min-height: 330px;
+    min-height: auto;
     border: 1px solid rgba(91, 18, 53, .10);
     border-radius: 26px;
     background:
@@ -494,6 +494,7 @@ hr {
         linear-gradient(180deg, #ffffff 0%, #fffdfa 100%);
     box-shadow: 0 14px 34px rgba(43, 24, 63, .065);
     padding: 1rem;
+    margin-bottom: .85rem;
     transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
 }
 
@@ -528,7 +529,6 @@ hr {
     color: var(--cfo-muted);
     font-weight: 650;
     line-height: 1.55;
-    min-height: 48px;
 }
 
 .cfo-ai-hub-grid {
