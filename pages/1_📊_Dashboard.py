@@ -20,7 +20,7 @@ from engines.financial_score import calculate_financial_health
 import engines.financial_score
 
 from components.kpi_cards import show_main_kpis
-from components.charts import show_forecast_chart
+from components.charts import apply_cfo_chart_theme, show_forecast_chart
 from components.simulator import show_decision_simulator
 from components.copilot import show_financial_copilot
 from components.agent import show_cfo_agent
@@ -40,12 +40,22 @@ if is_arabic:
     st.markdown(
         """<style>
         .stMainBlockContainer, [data-testid="stSidebarContent"] {direction: rtl; text-align: right;}
+        input, textarea {direction: rtl; text-align: right;}
         [data-testid="stMetric"] {text-align: right;}
         </style>""",
         unsafe_allow_html=True,
     )
 
 with st.sidebar:
+    st.markdown(
+        """
+        <div class="cfo-sidebar-brand">
+            <strong>CFO AI PRO</strong>
+            <span>Modern Saudi Fintech Analytics</span>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
     st.caption("اللغة / Language")
     selected_language = st.radio(
         "Language",
@@ -57,6 +67,21 @@ with st.sidebar:
     if new_language != language:
         st.session_state.language = new_language
         st.rerun()
+    st.markdown("---")
+    st.markdown(
+        """
+        <div style="color:#5b1235;font-weight:800;margin-bottom:.45rem;">Navigation</div>
+        <div style="color:#706777;line-height:2;">
+            ◦ Dashboard<br>
+            ◦ Financial Health<br>
+            ◦ Bank Readiness<br>
+            ◦ AI Advisor<br>
+            ◦ Decision Simulator<br>
+            ◦ Executive Report
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
 
 
 def load_css():
@@ -85,7 +110,8 @@ def show_monthly_sales_chart(sales_df):
         labels={"Date": "الشهر" if is_arabic else "Date", "Amount": "المبلغ" if is_arabic else "Amount"},
     )
 
-    fig.update_layout(height=420, template="plotly_white")
+    fig.update_traces(line=dict(color="#5b1235", width=3), marker=dict(size=8, color="#b88954"))
+    apply_cfo_chart_theme(fig, height=420)
     st.plotly_chart(fig, use_container_width=True)
 
 
@@ -106,17 +132,43 @@ def show_expense_breakdown(expenses_df):
         title="توزيع المصروفات" if is_arabic else "Expense Breakdown"
     )
 
-    fig.update_layout(height=420, template="plotly_white")
+    fig.update_traces(
+        marker=dict(colors=["#5b1235", "#2b183f", "#b88954", "#8a3d5d", "#22745f", "#d8b889"]),
+        textfont=dict(color="#211827"),
+    )
+    apply_cfo_chart_theme(fig, height=420)
     st.plotly_chart(fig, use_container_width=True)
 
 
 load_css()
 
-st.title("📊 لوحة CFO AI للتحليل المالي" if is_arabic else "📊 CFO AI Dashboard")
-st.caption(
-    "من بيانات الشركة إلى قرارات مالية وتمويلية قابلة للتفسير خلال دقائق."
+hero_dir = "rtl" if is_arabic else "ltr"
+hero_class = "cfo-hero cfo-rtl" if is_arabic else "cfo-hero"
+hero_title = "لوحة CFO AI للتحليل المالي" if is_arabic else "CFO AI Financial Dashboard"
+hero_subtitle = (
+    "من بيانات الشركة إلى صحة مالية، جاهزية تمويلية، محاكاة قرارات، وتوصيات قابلة للتفسير خلال دقائق."
     if is_arabic
-    else "From company data to explainable financial and financing decisions in minutes."
+    else "From company data to financial health, financing readiness, decision simulation, and explainable recommendations in minutes."
+)
+st.markdown(
+    f"""
+    <section class="{hero_class}" dir="{hero_dir}">
+        <div class="cfo-eyebrow">CFO AI PRO · Modern Saudi Fintech</div>
+        <h1 class="cfo-hero-title">{hero_title}</h1>
+        <p class="cfo-hero-subtitle">{hero_subtitle}</p>
+    </section>
+    """,
+    unsafe_allow_html=True,
+)
+
+st.markdown(
+    f"""
+    <div class="cfo-upload-card" dir="{hero_dir}">
+        <div class="cfo-upload-title">{"رفع ملف الشركة" if is_arabic else "Company File Upload"}</div>
+        <div class="cfo-upload-caption">{"ارفع ملف Excel أو استخدم بيانات العرض التجريبية. إذا لم يتعرف النظام على الملف سيحاول تحويله تلقائيًا." if is_arabic else "Upload an Excel workbook or use the sample demo data. If the file is not recognized, CFO AI will try to convert it automatically."}</div>
+    </div>
+    """,
+    unsafe_allow_html=True,
 )
 
 uploaded_file = st.file_uploader(
