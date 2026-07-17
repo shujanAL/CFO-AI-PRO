@@ -70,29 +70,33 @@ with st.sidebar:
     st.markdown("---")
     nav_items = (
         [
-            ("الرئيسية", "⌂"),
-            ("المؤشرات المالية", "▣"),
-            ("تحليلات الأعمال", "◈"),
-            ("المستشار الذكي", "✦"),
-            ("توقعات المبيعات", "⌁"),
-            ("محاكاة القرارات", "⚙"),
-            ("رفع الملفات", "⇧"),
+            ("الرئيسية", "⌂", "dashboard"),
+            ("رفع الملفات", "⇧", "file-upload"),
+            ("المؤشرات المالية", "▣", "financial-indicators"),
+            ("تحليلات الأعمال", "◈", "business-analytics"),
+            ("المستشار الذكي", "✦", "ai-advisor"),
+            ("توقعات المبيعات", "⌁", "sales-forecast"),
+            ("محاكاة القرارات", "⚙", "decision-simulator"),
         ]
         if is_arabic
         else [
-            ("Dashboard", "⌂"),
-            ("Financial Indicators", "▣"),
-            ("Business Analytics", "◈"),
-            ("AI Advisor", "✦"),
-            ("Sales Forecast", "⌁"),
-            ("Decision Simulator", "⚙"),
-            ("File Upload", "⇧"),
+            ("Dashboard", "⌂", "dashboard"),
+            ("File Upload", "⇧", "file-upload"),
+            ("Financial Indicators", "▣", "financial-indicators"),
+            ("Business Analytics", "◈", "business-analytics"),
+            ("AI Advisor", "✦", "ai-advisor"),
+            ("Sales Forecast", "⌁", "sales-forecast"),
+            ("Decision Simulator", "⚙", "decision-simulator"),
         ]
     )
-    nav_html = "".join(
-        f'<a class="cfo-nav-item {"active" if index == 0 else ""}" href="#"><span>{label}</span><span class="cfo-nav-icon">{icon}</span></a>'
-        for index, (label, icon) in enumerate(nav_items)
-    )
+    nav_links = []
+    for index, (label, icon, anchor) in enumerate(nav_items):
+        active_class = " active" if index == 0 else ""
+        nav_links.append(
+            f'<a class="cfo-nav-item{active_class}" href="#{anchor}">'
+            f'<span>{label}</span><span class="cfo-nav-icon">{icon}</span></a>'
+        )
+    nav_html = "".join(nav_links)
     st.markdown(
         f"""
         <div class="cfo-nav-title">{"لوحة التحكم" if is_arabic else "Navigation"}</div>
@@ -107,6 +111,10 @@ with st.sidebar:
 def load_css():
     with open("assets/style.css", encoding="utf-8") as f:
         st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
+
+
+def section_anchor(anchor: str):
+    st.markdown(f'<span id="{anchor}" class="cfo-anchor"></span>', unsafe_allow_html=True)
 
 
 def show_monthly_sales_chart(sales_df):
@@ -162,6 +170,8 @@ def show_expense_breakdown(expenses_df):
 
 load_css()
 
+section_anchor("dashboard")
+
 hero_dir = "rtl" if is_arabic else "ltr"
 hero_class = "cfo-hero cfo-rtl" if is_arabic else "cfo-hero"
 hero_title = "لوحة CFO AI للتحليل المالي" if is_arabic else "CFO AI Financial Dashboard"
@@ -180,6 +190,8 @@ st.markdown(
     """,
     unsafe_allow_html=True,
 )
+
+section_anchor("file-upload")
 
 st.markdown(
     f"""
@@ -257,6 +269,7 @@ health = calculate_financial_health(
     metrics["overdue_ratio"]
 )
 
+section_anchor("financial-indicators")
 show_main_kpis(metrics, health, language)
 
 st.divider()
@@ -298,6 +311,7 @@ with st.expander("لماذا حصلت الشركة على هذه الدرجة؟"
 
 st.divider()
 
+section_anchor("business-analytics")
 st.subheader("مؤشرات الأعمال" if is_arabic else "Business Metrics")
 
 c1, c2, c3 = st.columns(3)
@@ -335,6 +349,7 @@ with right:
 
 st.divider()
 
+section_anchor("ai-advisor")
 st.subheader("🤖 المستشار المالي الذكي" if is_arabic else "🤖 AI Financial Advisor")
 
 summary = generate_ai_summary(metrics, language)
@@ -355,6 +370,7 @@ for index, item in enumerate(summary):
 
 st.divider()
 
+section_anchor("sales-forecast")
 st.subheader("🔮 توقع المبيعات" if is_arabic else "🔮 Sales Forecast")
 
 forecast = forecast_monthly_sales(sales, months_ahead=3)
@@ -368,6 +384,7 @@ st.subheader("📋 الملخص التنفيذي" if is_arabic else "📋 Execut
 
 show_executive_cards(metrics, health, forecast, language)
 
+section_anchor("decision-simulator")
 show_decision_simulator(metrics, health, expenses, language)
 show_history(language)
 
@@ -443,6 +460,7 @@ show_financial_copilot(metrics, health, forecast, ranking, best_decision, financ
 
 st.divider()
 
+section_anchor("executive-report")
 st.subheader("📄 التقرير التنفيذي" if is_arabic else "📄 Executive Report")
 
 if st.button("إنشاء التقرير التنفيذي" if is_arabic else "Generate Executive Report"):
